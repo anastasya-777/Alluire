@@ -1,4 +1,4 @@
-package topacademy;
+package ru.topacademy.data;
 
 import com.github.javafaker.Faker;
 

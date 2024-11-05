@@ -1,8 +1,13 @@
-package topacademy;
+package ru.topacademy.test;
 
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
+import ru.topacademy.data.DataGenerator;
 
 import java.time.Duration;
 
@@ -11,26 +16,29 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class ChangeDateTest {
-    DataGenerator dataGenerator = new DataGenerator();
+    DataGenerator DataGenerator = new DataGenerator();
 
     String city = DataGenerator.genCity();
-
     String name = DataGenerator.genName();
-
     String phone = DataGenerator.genPhone();
-
     String planDate = DataGenerator.genDate(3, "dd.MM.yyyy");
-
     String changeDate = DataGenerator.genDate(7, "dd.MM.yyyy");
 
     @BeforeEach
     public void setUp() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
         open("http://localhost:9999/");
     }
 
+    @AfterEach
+    public void tearDown() {
+        SelenideLogger.removeListener("allure");
+    }
+
+
     @Test
+    @DisplayName("1.Проверка успешной отправки формы с валидными данными и изменением даты встречи")
     public void sendForm() {
-        // Проверка успешной отправки формы с валидными данными и изменением даты встречи
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue(name);
@@ -48,8 +56,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("2.Проверка валидации поля города с неверным названием города")
     public void validCity() {
-        // Проверка валидации поля города с неверным названием города
         $("[data-test-id=city] input").setValue("Берёзовский");
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue(name);
@@ -60,8 +68,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("3.Проверка валидации поля города, когда оно пустое")
     public void noCity() {
-        // Проверка валидации поля города, когда оно пустое
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue(name);
         $("[data-test-id=phone] input").setValue(phone);
@@ -71,8 +79,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("4.Проверка валидации поля даты, когда оно пустое")
     public void noDate() {
-        // Проверка валидации поля даты, когда оно пустое
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(Keys.BACK_SPACE);
         $("[data-test-id=name] input").setValue(name);
@@ -83,8 +91,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("5.Проверка валидации поля имени с неверным именем содержащим не русские символы")
     public void validName() {
-        // Проверка валидации поля имени с неверным именем (содержащим не русские символы)
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue("Gogenov-Jozef");
@@ -95,8 +103,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("6.Проверка валидации поля имени, когда оно пустое")
     public void noName() {
-        // Проверка валидации поля имени, когда оно пустое
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=phone] input").setValue(phone);
@@ -106,8 +114,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("7.Проверка валидации поля телефона с неверным номером телефона")
     public void validPhone() {
-        // Проверка валидации поля телефона с неверным номером телефона
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue(name);
@@ -118,8 +126,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("8.Проверка валидации поля телефона, когда оно пустое")
     public void noPhone() {
-        // Проверка валидации поля телефона, когда оно пустое
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue(name);
@@ -129,8 +137,8 @@ public class ChangeDateTest {
     }
 
     @Test
+    @DisplayName("9.Проверка валидации, когда флажок согласия не отмечен")
     public void noCheckBox() {
-        // Проверка валидации, когда флажок согласия не отмечен
         $("[data-test-id=city] input").setValue(city);
         $(".calendar-input__custom-control input").doubleClick().sendKeys(planDate);
         $("[data-test-id=name] input").setValue(name);
